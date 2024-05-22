@@ -1,4 +1,4 @@
-class OrderProduct extends HTMLElement {
+class OrderSummary extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
@@ -24,7 +24,7 @@ class OrderProduct extends HTMLElement {
           display: flex;
           flex-direction: column;
           justify-content: flex-start;
-          flex-grow: 1; /* Permite que la lista de productos crezca para ocupar el espacio disponible */
+          flex-grow: 1;
         }
 
         .product {
@@ -60,6 +60,16 @@ class OrderProduct extends HTMLElement {
           font-weight: 600;
           margin-bottom: 2rem;
         }
+
+        .order-summary {
+          margin-top: auto;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          grid-template-rows: repeat(2, 1fr);
+          color: white;
+          font-size: 1.25rem;
+        }
+
       </style>
       <div class="order-page">
         <div class="product-list">
@@ -67,21 +77,32 @@ class OrderProduct extends HTMLElement {
             <div class="product-name left">
               <p>Cocacola</p>
             </div>
-            <div class="product-price right">
-              <p>90.00€</p>
+            <div class="product-total right">
+              <p>180.00€</p>
             </div>
             <div class="product-type left">
               <p>16u, 330ml</p>
             </div>
             <div class="quantity right">
-              <minus-plus-component></minus-plus-component>
+              <p>2 x 90.00 €</p>
             </div>
           </div>
+        </div> 
+        <div class="order-summary">
+          <div class="total left">
+            <h2>Total</h2>
+          </div>
+          <div class="total-price right">
+            <h2>180.00€</h2>
+          </div>
+          <div class="description left">
+            <p>Impuestos no incluidos</p>
+          </div>
         </div>
-        <button class="see-order">Ver Pedido</button>
+        <button class="see-order">Finalizar Pedido</button>
       </div>
       `
   }
 }
 
-customElements.define('order-product-component', OrderProduct)
+customElements.define('order-summary-component', OrderSummary)

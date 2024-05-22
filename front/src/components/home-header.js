@@ -1,4 +1,4 @@
-class Header extends HTMLElement {
+class HomeHeader extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
@@ -16,18 +16,24 @@ class Header extends HTMLElement {
         align-items: center;
         display: flex;
         justify-content: space-between;
-        padding: 1.5rem 2rem;
         background-color: black;
         margin-bottom: 2rem;
+        align-items: left;
+      }
+
+      header h1 {
+        color: white;
+        font-size: 1.5rem;
+        margin-left: 1rem;
       }
       </style>
 
       <header>
-        <slot></slot>
+        <h1>Inicio</h1>
       </header>
 
       `
   }
 }
 
-customElements.define('header-component', Header)
+customElements.define('home-header-component', HomeHeader)
