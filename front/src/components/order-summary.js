@@ -16,15 +16,13 @@ class OrderSummary extends HTMLElement {
           height: 90vh;
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          align-items: center;
         }
 
         .product-list {
           display: flex;
           flex-direction: column;
           justify-content: flex-start;
-          flex-grow: 1;
+          flex-grow: 1; /* Permite que la lista de productos crezca para ocupar el espacio disponible */
         }
 
         .product {
@@ -51,6 +49,7 @@ class OrderSummary extends HTMLElement {
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: flex-end;
           border: none;
           width: 15rem;
           padding: 0.5rem;
@@ -62,6 +61,12 @@ class OrderSummary extends HTMLElement {
         }
 
         .order-summary {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+        }
+
+        .order-info {
           margin-top: auto;
           display: grid;
           grid-template-columns: repeat(2, 1fr);
@@ -73,33 +78,35 @@ class OrderSummary extends HTMLElement {
       </style>
       <div class="order-page">
         <div class="product-list">
-          <div class="product">
-            <div class="product-name left">
-              <p>Cocacola</p>
-            </div>
-            <div class="product-total right">
-              <p>180.00€</p>
-            </div>
-            <div class="product-type left">
-              <p>16u, 330ml</p>
-            </div>
-            <div class="quantity right">
-              <p>2 x 90.00 €</p>
-            </div>
+        <div class="product">
+          <div class="product-name left">
+            <p>Cocacola</p>
           </div>
-        </div> 
-        <div class="order-summary">
-          <div class="total left">
-            <h2>Total</h2>
+          <div class="product-price right">
+            <p>180.00€</p>
           </div>
-          <div class="total-price right">
-            <h2>180.00€</h2>
+          <div class="product-type left">
+            <p>16u, 330ml</p>
           </div>
-          <div class="description left">
-            <p>Impuestos no incluidos</p>
+          <div class="quantity right">
+            <p>2x90.00€</p>
           </div>
         </div>
-        <button class="see-order">Finalizar Pedido</button>
+        </div> 
+        <div class="order-summary">
+          <div class="order-info">
+            <div class="total left">
+              <h2>Total</h2>
+            </div>
+            <div class="total-price right">
+              <h2>180.00€</h2>
+            </div>
+            <div class="description left">
+              <p>Impuestos no incluidos</p>
+            </div>
+          </div>
+          <button class="see-order">Finalizar Pedido</button>
+        </div>
       </div>
       `
   }

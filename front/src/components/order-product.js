@@ -12,19 +12,29 @@ class OrderProduct extends HTMLElement {
     this.shadow.innerHTML =
       /* html */`
       <style>
+
+        *{
+          box-sizing: border-box;
+        }
+
+        p{
+          margin: 0;
+        }
+
         .order-page {
-          height: 90vh;
+          height: 80vh;
           display: flex;
           flex-direction: column;
           justify-content: center;
+          padding: 1rem;
           align-items: center;
+          width: 100%;
         }
 
         .product-list {
           display: flex;
           flex-direction: column;
-          justify-content: flex-start;
-          flex-grow: 1; /* Permite que la lista de productos crezca para ocupar el espacio disponible */
+          width: 100%;
         }
 
         .product {
@@ -32,8 +42,8 @@ class OrderProduct extends HTMLElement {
           grid-template-columns: repeat(2, 1fr);
           grid-template-rows: repeat(2, 1fr);
           color: white;
+          gap: 1rem;
           font-size: 1.25rem;
-          margin-bottom: 1rem;
         }
 
         .left {
@@ -43,7 +53,6 @@ class OrderProduct extends HTMLElement {
 
         .right {
           justify-self: end;
-          margin-right: 0.5rem;
         }
 
         .see-order {
@@ -58,7 +67,6 @@ class OrderProduct extends HTMLElement {
           border-radius: 3rem;
           color: hsla(270, 83%, 36%, 1);
           font-weight: 600;
-          margin-bottom: 2rem;
         }
       </style>
       <div class="order-page">
