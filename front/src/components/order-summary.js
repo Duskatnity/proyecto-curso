@@ -12,6 +12,10 @@ class OrderSummary extends HTMLElement {
     this.shadow.innerHTML =
       /* html */`
       <style>
+        p {
+          margin: 0.5rem 0rem;
+        }
+
         .order-page {
           height: 90vh;
           display: flex;

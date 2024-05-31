@@ -12,26 +12,15 @@ class HomeHeader extends HTMLElement {
     this.shadow.innerHTML =
       /* html */`
       <style>
-      header{
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-        background-color: black;
-        margin-bottom: 2rem;
-        align-items: left;
-      }
-
-      header h1 {
+      h1 {
         color: white;
-        font-size: 1.5rem;
+        font-size: 1rem;
         margin-left: 1rem;
       }
       </style>
-
-      <header>
+      <div class="title">
         <h1>Inicio</h1>
-      </header>
-
+      </div>
       `
   }
 }

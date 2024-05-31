@@ -28,7 +28,7 @@ class OrderPage extends HTMLElement {
 
         .orders-page {
           display: flex;
-          height: 100vh;
+          height: 80vh;
         }
 
         .orders-page svg {
@@ -51,6 +51,7 @@ class OrderPage extends HTMLElement {
           background-color: white;
           padding: 0.2rem;
           margin-bottom: 1rem;
+          align-items: center;
         }
 
         .register-list {
@@ -84,8 +85,9 @@ class OrderPage extends HTMLElement {
         .register-total {
           display: flex;
           justify-content: space-between;
+          align-items: center;
           background-color: white;
-          padding: 0.5rem;
+          padding: 1rem;
           font-weight: 600;
         }
 
@@ -109,13 +111,15 @@ class OrderPage extends HTMLElement {
           width: 100%;
           background-color: white;
           margin-bottom: 1rem;
+          align-items: center;
         }
 
         .option-general {
           display: flex;
           background-color: purple;
           color: white;
-          padding: 0.1rem;
+          padding: 0.5rem;
+          font-weight: 600;
         }
 
         .option-buttons {
