@@ -15,12 +15,12 @@ class OrderProduct extends HTMLElement {
     this.data = [
       {
         "product": "Cocacola",
-        "price": "90",
+        "price": "90.00",
         "type": "16 u, 330ml"
       },
       {
         "product": "Agua",
-        "price": "50",
+        "price": "50.00",
         "type": "24u, 500ml"
       }
     ]
@@ -62,6 +62,8 @@ class OrderProduct extends HTMLElement {
           color: white;
           gap: 1rem;
           font-size: 1.25rem;
+          margin-bottom: 1rem;
+          border-bottom: 1px solid #ffffff;
         }
 
         .left {
@@ -89,20 +91,6 @@ class OrderProduct extends HTMLElement {
       </style>
       <div class="order-page">
         <div class="product-list">
-          <div class="product">
-            <div class="product-name left">
-              <p>Cocacola</p>
-            </div>
-            <div class="product-price right">
-              <p>90.00€</p>
-            </div>
-            <div class="product-type left">
-              <p>16u, 330ml</p>
-            </div>
-            <div class="quantity right">
-              <minus-plus-component></minus-plus-component>
-            </div>
-          </div>
         </div>
         <button class="see-order">Ver Pedido</button>
       </div>
@@ -128,7 +116,7 @@ class OrderProduct extends HTMLElement {
         product.appendChild(productPrice)
 
         const price = document.createElement('p')
-        price.textContent = productItem.price
+        price.textContent = productItem.price+("€")
         productPrice.appendChild(price)
 
         const productType = document.createElement('div')
