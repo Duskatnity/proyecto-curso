@@ -1,11 +1,29 @@
-class OrderProduct extends HTMLElement {
+class Orderorder extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
+
+    this.data = []
   }
 
-  connectedCallback () {
-    this.render()
+  async connectedCallback () {
+    await this.loadData()
+    await this.render()
+  }
+
+  loadData () {
+    this.data = [
+      {
+        "number": "00000000002",
+        "total": "180.00",
+        "date": "13-05-2024 17:09"
+      },
+      {
+        "number": "00000000003",
+        "total": "150.00",
+        "date": "13-05-2024 17:10"
+      }
+    ]
   }
 
   render () {
@@ -34,11 +52,11 @@ class OrderProduct extends HTMLElement {
           margin-bottom: 1rem;
         }
 
-        .product-list {
+        .order-list {
           display: flex;
           flex-direction: column;
           justify-content: flex-start;
-          flex-grow: 1; /* Permite que la lista de productos crezca para ocupar el espacio disponible */
+          flex-grow: 1; /* Permite que la lista de orderos crezca para ocupar el espacio disponible */
         }
 
         .filterer {
@@ -50,7 +68,7 @@ class OrderProduct extends HTMLElement {
           margin-bottom: 1rem;
         }
 
-        .product {
+        .order {
           border-top: 1px solid #ffffff;
           display: grid;
           grid-template-columns: repeat(2, 1fr);
@@ -91,15 +109,15 @@ class OrderProduct extends HTMLElement {
       </style>
         <div class="filter-page">
           <div class="filterer">
-            <div class="product-name left">
+            <div class="order-name left">
               <input type=text placeholder="Referencia del pedido">
             </div>
-            <div class="product-price right">
+            <div class="order-price right">
               <button class="reference-search">
                 Buscar por referencia
               </button>
             </div>
-            <div class="product-type left">
+            <div class="order-type left">
               <input type="date">
             </div>
             <div class="quantity right">
@@ -109,38 +127,50 @@ class OrderProduct extends HTMLElement {
             </div>
           </div>
           <div class="order-list">
-            <div class="product">
-              <div class="order-number left">
-                <p>00000000002</p>
-              </div>
-              <div class="order-price right">
-                <p>180.00€</p>
-              </div>
-              <div class="order-date left">
-                <p>13-05-2024 17:09</p>
-              </div>
-              <button class="see-order right">
-                Ver Pedido
-              </button>
-            </div>
-            <div class="product">
-              <div class="order-number left">
-                <p>00000000002</p>
-              </div>
-              <div class="order-price right">
-                <p>180.00€</p>
-              </div>
-              <div class="order-date left">
-                <p>13-05-2024 17:09</p>
-              </div>
-              <button class="see-order right">
-                Ver Pedido
-              </button>
             </div>
           </div>
         </div>
       `
+      const orderList = this.shadow.querySelector('.order-list')
+
+      this.data.forEach(orderItem => {
+        const order = document.createElement('div')
+        order.classList.add('order')
+        orderList.appendChild(order)
+
+        const orderNumber = document.createElement('div')
+        orderNumber.classList.add('order-number', 'left')
+        order.appendChild(orderNumber)
+
+        const number = document.createElement('p')
+        number.textContent = orderItem.number
+        orderNumber.appendChild(number)
+
+        const orderPrice = document.createElement('div')
+        orderPrice.classList.add('order-price', 'right')
+        order.appendChild(orderPrice)
+
+        const price = document.createElement('p')
+        price.textContent = orderItem.total+("€")
+        orderPrice.appendChild(price)
+
+        const orderDate = document.createElement('div')
+        orderDate.classList.add('order-date', 'left')
+        order.appendChild(orderDate)
+
+        const date = document.createElement('p')
+        date.textContent = orderItem.date
+        orderDate.appendChild(date)
+
+        const orderButton = document.createElement('div')
+        orderButton.classList.add('button', 'right')
+        order.appendChild(orderButton)
+
+        const button = document.createElement('button')
+        button.textContent = ("Ver Pedido")
+        orderButton.appendChild(button)
+      })
   }
 }
 
-customElements.define('order-filterer-component', OrderProduct)
+customElements.define('order-filterer-component', Orderorder)

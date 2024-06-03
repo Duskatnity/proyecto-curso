@@ -33,7 +33,7 @@ class OrderSummary extends HTMLElement {
       /* html */`
       <style>
         p {
-          margin: 0.5rem 0rem;
+          margin: 0.5rem 0.5rem;
         }
 
         .order-page {
@@ -155,7 +155,7 @@ class OrderSummary extends HTMLElement {
         productQuantity.classList.add('quantity', 'right')
         product.appendChild(productQuantity)
 
-        const quantity = document.createElement('div')
+        const quantity = document.createElement('p')
         quantity.textContent = (productItem.quantity)+("x")+productItem.price+("€")
         productQuantity.appendChild(quantity)
       })
@@ -166,7 +166,7 @@ class OrderSummary extends HTMLElement {
 
       console.log(total)
 
-      document.getElementById('total').textContent += total;
+      this.shadow.getElementById('total').textContent = `${total} €`;
   }
 }
 
