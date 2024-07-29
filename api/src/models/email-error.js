@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-  const User = sequelize.define('User',
+  const EmailError = sequelize.define('EmailError',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -7,14 +7,18 @@ module.exports = function (sequelize, DataTypes) {
         primaryKey: true,
         allowNull: false
       },
-      name: {
+      userType: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      email: {
+      emailTemplate: {
         type: DataTypes.STRING,
         allowNull: false
       },
+      error: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },  
       createdAt: {
         type: DataTypes.DATE
       },
@@ -23,7 +27,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     }, {
       sequelize,
-      tableName: 'users',
+      tableName: 'email_errors',
       timestamps: true,
       paranoid: true,
       indexes: [
@@ -39,13 +43,9 @@ module.exports = function (sequelize, DataTypes) {
     }
   )
 
-  User.associate = function (models) {
-    User.hasMany(models.SentEmail, { as: 'sentEmails', foreignKey: 'sentEmailID' })
-    User.hasMany(models.UserActivationToken, { as: 'userActivationTokens', foreignKey: 'userActivationTokenId' })
-    User.hasMany(models.UserCredential, { as: 'userCredentials', foreignKey: 'userCredentialId' })
-    User.hasMany(models.UserResetPasswordToken, { as: 'userResetPasswordTokens', foreignKey: 'userResetPasswordTokenId' })
-
+  EmailError.associate = function (models) {
+   
   }
 
-  return User
+  return EmailError
 }

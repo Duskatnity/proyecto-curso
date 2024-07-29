@@ -1,0 +1,14 @@
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-color: hsla(241, 83%, 36%, 1);
+  font-family: "Lato", sans-serif;
+  font-style: normal;
+}
+

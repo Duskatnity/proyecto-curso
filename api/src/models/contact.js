@@ -1,11 +1,15 @@
 module.exports = function (sequelize, DataTypes) {
-  const User = sequelize.define('User',
+  const Contact = sequelize.define('Contact',
     {
       id: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false
+      },
+      fingerprintId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
       name: {
         type: DataTypes.STRING,
@@ -13,6 +17,14 @@ module.exports = function (sequelize, DataTypes) {
       },
       email: {
         type: DataTypes.STRING,
+        allowNull: false
+      },
+      subject: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      message: {
+        type: DataTypes.TEXT,
         allowNull: false
       },
       createdAt: {
@@ -23,7 +35,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     }, {
       sequelize,
-      tableName: 'users',
+      tableName: 'contacts',
       timestamps: true,
       paranoid: true,
       indexes: [
@@ -39,13 +51,9 @@ module.exports = function (sequelize, DataTypes) {
     }
   )
 
-  User.associate = function (models) {
-    User.hasMany(models.SentEmail, { as: 'sentEmails', foreignKey: 'sentEmailID' })
-    User.hasMany(models.UserActivationToken, { as: 'userActivationTokens', foreignKey: 'userActivationTokenId' })
-    User.hasMany(models.UserCredential, { as: 'userCredentials', foreignKey: 'userCredentialId' })
-    User.hasMany(models.UserResetPasswordToken, { as: 'userResetPasswordTokens', foreignKey: 'userResetPasswordTokenId' })
-
+  Contact.associate = function (models) {
+    Contact.belongsTo(models.Fingerprint, { as: 'fingerprint', foreignKey: 'fingerprintId' })
   }
 
-  return User
+  return Contact
 }

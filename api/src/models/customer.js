@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-  const User = sequelize.define('User',
+  const Customer = sequelize.define('Customer',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -23,7 +23,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     }, {
       sequelize,
-      tableName: 'users',
+      tableName: 'customers',
       timestamps: true,
       paranoid: true,
       indexes: [
@@ -39,13 +39,13 @@ module.exports = function (sequelize, DataTypes) {
     }
   )
 
-  User.associate = function (models) {
-    User.hasMany(models.SentEmail, { as: 'sentEmails', foreignKey: 'sentEmailID' })
-    User.hasMany(models.UserActivationToken, { as: 'userActivationTokens', foreignKey: 'userActivationTokenId' })
-    User.hasMany(models.UserCredential, { as: 'userCredentials', foreignKey: 'userCredentialId' })
-    User.hasMany(models.UserResetPasswordToken, { as: 'userResetPasswordTokens', foreignKey: 'userResetPasswordTokenId' })
-
+  Customer.associate = function (models) {
+    Customer.hasMany(models.CustomerActivationToken, { as: 'customers', foreignKey: 'customerId' })
+    Customer.hasMany(models.CustomerResetPasswordToken, { as: 'customerResetPasswordTokens', foreignKey: 'customerResetPasswordId' })
+    Customer.hasMany(models.CustomerCredential, { as: 'customerCredentials', foreignKey: 'customerCredentialId' })
+    Customer.hasMany(models.Return, { as: 'returns', foreignKey: 'returnId' })
+    Customer.hasMany(models.Fingerprint, { as: 'fingerprints', foreignKey: 'fingerprintId' })
   }
 
-  return User
+  return Customer
 }

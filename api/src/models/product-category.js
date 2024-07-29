@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-  const User = sequelize.define('User',
+  const ProductCategory = sequelize.define('ProductCategory',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -11,10 +11,6 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: false
       },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
       createdAt: {
         type: DataTypes.DATE
       },
@@ -23,7 +19,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     }, {
       sequelize,
-      tableName: 'users',
+      tableName: 'product_categories',
       timestamps: true,
       paranoid: true,
       indexes: [
@@ -39,13 +35,9 @@ module.exports = function (sequelize, DataTypes) {
     }
   )
 
-  User.associate = function (models) {
-    User.hasMany(models.SentEmail, { as: 'sentEmails', foreignKey: 'sentEmailID' })
-    User.hasMany(models.UserActivationToken, { as: 'userActivationTokens', foreignKey: 'userActivationTokenId' })
-    User.hasMany(models.UserCredential, { as: 'userCredentials', foreignKey: 'userCredentialId' })
-    User.hasMany(models.UserResetPasswordToken, { as: 'userResetPasswordTokens', foreignKey: 'userResetPasswordTokenId' })
-
+  ProductCategory.associate = function (models) {
+   
   }
 
-  return User
+  return ProductCategory
 }

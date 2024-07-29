@@ -1,9 +1,9 @@
 const sequelizeDb = require('../../models')
-const Company = sequelizeDb.Company
+const UserResetPasswordToken = sequelizeDb.UserResetPasswordToken
 const Op = sequelizeDb.Sequelize.Op
 
 exports.create = (req, res) => {
-  Company.create(req.body).then(async data => {
+  UserResetPasswordToken.create(req.body).then(async data => {
     res.status(200).send(data)
   }).catch(err => {
     if (err.errors) {
@@ -32,9 +32,9 @@ exports.findAll = (req, res) => {
 
   const condition = Object.keys(whereStatement).length > 0 ? { [Op.and]: [whereStatement] } : {}
 
-  Company.findAndCountAll({
+  UserResetPasswordToken.findAndCountAll({
     where: condition,
-    attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
+    attributes: ['id', 'userId', 'token', 'expirationDate', 'used', 'createdAt', 'updatedAt', 'deletedAt'],
     limit,
     offset,
     order: [['createdAt', 'DESC']]
@@ -58,7 +58,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id
 
-  Company.findByPk(id).then(data => {
+  UserResetPasswordToken.findByPk(id).then(data => {
     if (data) {
       res.status(200).send(data)
     } else {
@@ -76,7 +76,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id
 
-  Company.update(req.body, {
+  UserResetPasswordToken.update(req.body, {
     where: { id }
   }).then(([numberRowsAffected]) => {
     if (numberRowsAffected === 1) {
@@ -98,7 +98,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id
 
-  Company.destroy({
+  UserResetPasswordToken.destroy({
     where: { id }
   }).then((numberRowsAffected) => {
     if (numberRowsAffected === 1) {
