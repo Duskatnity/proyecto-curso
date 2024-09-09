@@ -1,4 +1,4 @@
-class Page extends HTMLElement {
+class MainPage extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
@@ -13,9 +13,10 @@ class Page extends HTMLElement {
       /* html */`
       <style>
       .main-page {
-        display: flex;
+        display: grid;
         height: 80vh;
-        justify-content: space-between;
+        gap: 2rem;
+        grid-template-columns: 2fr 4fr;
       }
       </style>
 
@@ -26,4 +27,4 @@ class Page extends HTMLElement {
   }
 }
 
-customElements.define('page-component', Page)
+customElements.define('main-page-component', MainPage)

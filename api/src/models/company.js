@@ -52,7 +52,7 @@ module.exports = function (sequelize, DataTypes) {
   )
 
   Company.associate = function (models) {
-   
+
   }
 
   return Company

@@ -1,4 +1,4 @@
-class Title extends HTMLElement {
+class Error extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
@@ -12,17 +12,11 @@ class Title extends HTMLElement {
     this.shadow.innerHTML =
       /* html */`
       <style>
-        h1 {
-          color: white;
-          margin-left: 1rem;
-        }
       </style>
 
-      <div class="title">
-        <h1>Pedidos</h1>
-      </div>
+      <p>prueba</p>
       `
   }
 }
 
-customElements.define('title-component', Title)
+customElements.define('error-component', Error)

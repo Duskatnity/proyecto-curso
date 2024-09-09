@@ -1,10 +1,23 @@
+import isEqual from 'lodash-es/isEqual'
+import { store } from '../redux/store.js'
+
 class Form extends HTMLElement {
   constructor () {
     super()
+    this.unsubscribe = null
+    this.formElementData = null
     this.shadow = this.attachShadow({ mode: 'open' })
   }
 
-  connectedCallback () {
+  async connectedCallback () {
+    this.unsubscribe = store.subscribe(() => {
+      const currentState = store.getState()
+
+      if (currentState.crud.formElement && !isEqual(this.formElementData, currentState.crud.formElement.data)) {
+        this.formElementData = currentState.crud.formElement.data
+        this.showElement(this.formElementData)
+      }
+    })
     this.render()
   }
 
@@ -12,6 +25,11 @@ class Form extends HTMLElement {
     this.shadow.innerHTML =
       /* html */`
       <style>
+
+        svg:hover{
+          cursor: pointer;
+        }
+
         p{
           margin: 0.25rem;
         }
@@ -90,12 +108,12 @@ class Form extends HTMLElement {
           margin-right: 1rem;
         }
 
-        .search-fields {
+        .fields form {
           display: flex;
           flex-direction: row;
         }
 
-        .name-search, .email-search {
+        .form-element {
           display: flex;
           flex-direction: column;
           color: white;
@@ -104,7 +122,7 @@ class Form extends HTMLElement {
           font-weight: 600;
         }
 
-        .name-input, .email-input {
+        input {
           border: none;
           border-bottom: 1px solid white;
           background-color: hsla(239, 63%, 50%, 1);
@@ -127,18 +145,51 @@ class Form extends HTMLElement {
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>content-save</title><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" /></svg>              </div>
           </div>
         </div>
-        <div class="search-fields">
-          <div class="name-search">
-            <label>Nombre</label>
-            <input type="text" class="name-input">
-          </div>
-          <div class="email-search">
-            <label>Email</label>
-            <input type="text" class="email-input">
-          </div>
+        <div class="fields">
+          <form>
+            <div class="form-element">
+              <label>Nombre</label>
+              <input type="text" class="name-input" name="name">
+            </div>
+            <div class="form-element">
+              <label>Email</label>
+              <input type="text" class="email-input" name="email">
+            </div>
+          </form>
         </div>
       </div>
       `
+
+    this.renderSaveButton()
+  }
+
+  renderSaveButton () {
+    this.shadow.querySelector('.save-button').addEventListener('click', async () => {
+      const form = this.shadow.querySelector('form')
+      const formData = new FormData(form)
+
+      // for (const pair of formData.entries()) {
+      //   console.log(pair[0] + ', ' + pair[1])
+      // }
+
+      const formDataJson = {}
+
+      for (const [key, value] of formData.entries()) {
+        formDataJson[key] = value !== '' ? value : null
+      }
+
+      const endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formDataJson)
+        })
+      } catch (error) { console.error(error) }
+    })
   }
 }
 

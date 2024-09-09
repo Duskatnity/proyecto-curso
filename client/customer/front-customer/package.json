@@ -1,6 +1,14 @@
 {
+  "scripts": {
+    "dev": "vite --mode development",
+    "build": "vite build --mode production",
+    "preview": "vite preview"
+  },
   "devDependencies": {
     "standard": "^17.1.0",
     "vite": "^5.3.5"
+  },
+  "dependencies": {
+    "terser": "^5.31.3"
   }
 }
