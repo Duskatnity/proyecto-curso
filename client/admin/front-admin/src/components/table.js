@@ -6,9 +6,20 @@ class Table extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
+    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
+    this.unsubscribe = null
   }
 
   async connectedCallback () {
+    this.unsubscribe = store.subscribe(async () => {
+      const currentState = store.getState()
+
+      if (currentState.crud.tableEndpoint && isEqual(this.endpoint, currentState.crud.tableEndpoint)) {
+        await this.loadData()
+        await this.render()
+      }
+    })
+
     await this.loadData()
     await this.render()
   }
@@ -43,6 +54,7 @@ class Table extends HTMLElement {
 
       .register{
         width: 80%;
+        margin-bottom: 1rem;
       }
 
       .register-top {

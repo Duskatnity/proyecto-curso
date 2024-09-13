@@ -1,5 +1,6 @@
 import isEqual from 'lodash-es/isEqual'
 import { store } from '../redux/store.js'
+import { refreshTable } from '../redux/crud-slice.js'
 
 class Form extends HTMLElement {
   constructor () {
@@ -7,6 +8,7 @@ class Form extends HTMLElement {
     this.unsubscribe = null
     this.formElementData = null
     this.shadow = this.attachShadow({ mode: 'open' })
+    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
   }
 
   async connectedCallback () {
@@ -147,6 +149,7 @@ class Form extends HTMLElement {
         </div>
         <div class="fields">
           <form>
+            <input type="hidden" name="id">
             <div class="form-element">
               <label>Nombre</label>
               <input type="text" class="name-input" name="name">
@@ -159,8 +162,16 @@ class Form extends HTMLElement {
         </div>
       </div>
       `
-
     this.renderSaveButton()
+    this.renderResetButton()
+  }
+
+  renderResetButton () {
+    this.shadow.querySelector('.clean-button').addEventListener('click', async (event) => {
+      const form = this.shadow.querySelector('form')
+      form.reset()
+      this.shadow.querySelector("[name='id']").value = ''
+    })
   }
 
   renderSaveButton () {
@@ -178,17 +189,36 @@ class Form extends HTMLElement {
         formDataJson[key] = value !== '' ? value : null
       }
 
-      const endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
+      const method = formDataJson.id ? 'PUT' : 'POST'
+      const endpoint = formDataJson.id ? `${this.endpoint}/${formDataJson.id}` : this.endpoint
 
       try {
         const response = await fetch(endpoint, {
-          method: 'POST',
+          method,
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(formDataJson)
         })
+
+        store.dispatch(refreshTable(endpoint))
+        form.reset()
+
+        document.dispatchEvent(new CustomEvent('message', {
+          detail: {
+            message: 'Datos guardados correctamente',
+            type: 'success'
+          }
+        }))
       } catch (error) { console.error(error) }
+    })
+  }
+
+  showElement = async element => {
+    Object.entries(element).forEach(([key, value]) => {
+      if (this.shadow.querySelector(`[name="${key}"]`)) {
+        this.shadow.querySelector(`[name="${key}"]`).value = value
+      }
     })
   }
 }
