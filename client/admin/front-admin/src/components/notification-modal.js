@@ -13,9 +13,6 @@ class Notification extends HTMLElement {
     const notificationBox = this.shadow.querySelector('.notification-box')
     notificationBox.classList.add('active')
 
-    const notificationHeader = this.shadow.querySelector('.notification-header')
-    notificationHeader.classList.add(event.detail.type)
-
     this.shadow.querySelector('.message').textContent = event.detail.message
 
     setTimeout(() => {
@@ -55,9 +52,7 @@ class Notification extends HTMLElement {
       </style>
 
       <div class="notification-box">
-        <div class="message">
-          
-        </div>
+        <p class="message"></p>
       </div>
 
       `

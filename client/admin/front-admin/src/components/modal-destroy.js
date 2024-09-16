@@ -1,3 +1,6 @@
+import { store } from '../redux/store.js'
+import { refreshTable } from '../redux/crud-slice.js'
+
 class ModalDestroy extends HTMLElement {
   constructor () {
     super()
@@ -5,7 +8,14 @@ class ModalDestroy extends HTMLElement {
   }
 
   connectedCallback () {
+    document.addEventListener('show-modal-destroy', this.handleShowDestroyModal.bind(this))
     this.render()
+  }
+
+  handleShowDestroyModal (event) {
+    this.endpoint = event.detail.endpoint
+    this.element = event.detail.element
+    this.shadow.querySelector('.overlay').classList.add('active')
   }
 
   render () {
@@ -93,16 +103,22 @@ class ModalDestroy extends HTMLElement {
 
       `
 
-    const confirmButton = this.shadow.querySelector('confirmation-button')
+    const confirmButton = this.shadow.querySelector('.confirmation-button')
 
-    confirmButton.addEventListener('click', () => {
+    confirmButton.addEventListener('click', async () => {
+      await fetch(this.element, {
+        method: 'DELETE'
+      })
 
+      store.dispatch(refreshTable(this.endpoint))
+
+      this.shadow.querySelector('.overlay').classList.remove('active')
     })
 
-    const cancelButton = this.shadow.querySelector('cancel-button')
+    const cancelButton = this.shadow.querySelector('.cancel-button')
 
     cancelButton.addEventListener('click', () => {
-
+      this.shadow.querySelector('.overlay').classList.remove('active')
     })
   }
 }
