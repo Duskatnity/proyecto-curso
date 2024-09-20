@@ -1,13 +1,16 @@
 import isEqual from 'lodash-es/isEqual'
 import { store } from '../redux/store.js'
-import { showFormElement } from '../redux/crud-slice.js'
+import { showFormElement, applyFilter } from '../redux/crud-slice.js'
 
 class Table extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
-    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
+    this.data = []
     this.unsubscribe = null
+    this.endpoint = `${import.meta.env.VITE_API_URL}/api/admin/users`
+    this.page = 1
+    this.queryString = null
   }
 
   async connectedCallback () {
@@ -18,14 +21,28 @@ class Table extends HTMLElement {
         await this.loadData()
         await this.render()
       }
-    })
 
+      if (!isEqual(this.queryString, currentState.crud.queryString)) {
+        this.queryString = currentState.crud.queryString
+        await this.loadData()
+        await this.render()
+
+        if (this.queryString) {
+          const filterButton = this.shadow.querySelector('.filter-button')
+          const filterCancelButton = this.shadow.querySelector('.filter-cancel-button')
+
+          filterButton.classList.remove('active')
+          filterCancelButton.classList.add('active')
+        }
+      }
+    })
     await this.loadData()
     await this.render()
   }
 
   async loadData () {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users`)
+    const endpoint = this.queryString ? `${this.endpoint}?${this.queryString}` : this.endpoint
+    const response = await fetch(endpoint)
     this.data = await response.json()
   }
 
@@ -33,7 +50,7 @@ class Table extends HTMLElement {
     this.shadow.innerHTML =
       /* html */`
       <style>
-      .left-column {
+      .table {
         padding: 20px;
       }
 
@@ -43,6 +60,22 @@ class Table extends HTMLElement {
         padding: 0.2rem;
         margin-bottom: 1rem;
         align-items: center;
+      }
+
+      .filter-bar svg:hover {
+        cursor: pointer;
+      }
+
+      .filter-button, .filter-cancel-button {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .filter-button.active, .filter-cancel-button.active{
+        display: block;
       }
 
       .register-list {
@@ -108,9 +141,15 @@ class Table extends HTMLElement {
       }
       </style>
 
-      <div class="left-column">
+      <div class="table">
         <div class="filter-bar">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>filter-menu</title><path d="M11 11L16.76 3.62A1 1 0 0 0 16.59 2.22A1 1 0 0 0 16 2H2A1 1 0 0 0 1.38 2.22A1 1 0 0 0 1.21 3.62L7 11V16.87A1 1 0 0 0 7.29 17.7L9.29 19.7A1 1 0 0 0 10.7 19.7A1 1 0 0 0 11 18.87V11M13 16L18 21L23 16Z" /></svg>          </div>
+          <div class="filter-button active">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>filter-menu</title><path d="M11 11L16.76 3.62A1 1 0 0 0 16.59 2.22A1 1 0 0 0 16 2H2A1 1 0 0 0 1.38 2.22A1 1 0 0 0 1.21 3.62L7 11V16.87A1 1 0 0 0 7.29 17.7L9.29 19.7A1 1 0 0 0 10.7 19.7A1 1 0 0 0 11 18.87V11M13 16L18 21L23 16Z" /></svg>          
+          </div>
+          <div class="filter-cancel-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.76,20.83L17.6,18L14.76,15.17L16.17,13.76L19,16.57L21.83,13.76L23.24,15.17L20.43,18L23.24,20.83L21.83,22.24L19,19.4L16.17,22.24L14.76,20.83M12,12V19.88C12.04,20.18 11.94,20.5 11.71,20.71C11.32,21.1 10.69,21.1 10.3,20.71L8.29,18.7C8.06,18.47 7.96,18.16 8,17.87V12H7.97L2.21,4.62C1.87,4.19 1.95,3.56 2.38,3.22C2.57,3.08 2.78,3 3,3V3H17V3C17.22,3 17.43,3.08 17.62,3.22C18.05,3.56 18.13,4.19 17.79,4.62L12.03,12H12Z" /></svg>
+          </div>
+        </div>
         <div class="register-list"></div>
         <div class="register-total">
           <div class="register-count">
@@ -173,11 +212,11 @@ class Table extends HTMLElement {
       list.appendChild(listUpdateDate)
     })
 
-    this.renderRegisterButtons()
+    this.renderButtons()
   }
 
-  async renderRegisterButtons () {
-    this.shadow.querySelector('.register-list').addEventListener('click', async (event) => {
+  async renderButtons () {
+    this.shadow.querySelector('.table').addEventListener('click', async (event) => {
       if (event.target.closest('.edit-button')) {
         const id = event.target.closest('.edit-button').dataset.id
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`)
@@ -199,6 +238,16 @@ class Table extends HTMLElement {
             element
           }
         }))
+      }
+
+      if (event.target.closest('.filter-button')) {
+        document.dispatchEvent(new CustomEvent('show-modal-filter'))
+      }
+
+      if (event.target.closest('.filter-cancel-button')) {
+        store.dispatch(applyFilter(null))
+        this.shadow.querySelector('.filter-button').classList.add('active')
+        event.target.closest('.filter-cancel-button').classList.remove('active')
       }
     })
   }

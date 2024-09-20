@@ -13,11 +13,27 @@ module.exports = function (sequelize, DataTypes) {
       },
       email: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Email".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Email".'
+          }
+        }
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Contraseña".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Contraseña".'
+          }
+        }
       },
       lastPasswordChange: {
         type: DataTypes.DATE,

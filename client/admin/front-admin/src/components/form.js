@@ -18,6 +18,12 @@ class Form extends HTMLElement {
       if (currentState.crud.formElement && !isEqual(this.formElementData, currentState.crud.formElement.data)) {
         this.formElementData = currentState.crud.formElement.data
         this.showElement(this.formElementData)
+
+        if (this.formElementData) {
+          this.showElement(this.formElementData)
+        } else {
+          this.resetForm()
+        }
       }
     })
     this.render()
@@ -44,6 +50,28 @@ class Form extends HTMLElement {
         .orders-page svg:hover {
           cursor: pointer;
           fill: blue;
+        }
+
+        .validation-errors{
+            background-color: hsl(0, 93%, 66%);
+            display: none;
+            margin-bottom: 1rem;
+            padding: 1rem;
+          }
+
+        .validation-errors.active{
+          display: block;
+        }
+
+        .validation-errors ul{
+          margin: 0;
+          padding: 0;
+          list-style: none;
+        }
+
+        .validation-errors li{
+          color: hsl(0, 0%, 100%);
+          font-weight: 600;
         }
 
         .register-top {
@@ -133,6 +161,10 @@ class Form extends HTMLElement {
           margin-bottom: 1rem;
           width: 66vh;
         }
+
+        input.error{
+          border-bottom: 2px solid hsl(0, 93%, 66%);
+        }
       </style>
 
       <div class="right-column">
@@ -148,6 +180,9 @@ class Form extends HTMLElement {
           </div>
         </div>
         <div class="fields">
+          <div class="validation-errors">
+            <ul></ul>
+          </div>
           <form>
             <input type="hidden" name="id">
             <div class="form-element">
@@ -201,16 +236,59 @@ class Form extends HTMLElement {
           body: JSON.stringify(formDataJson)
         })
 
-        store.dispatch(refreshTable(endpoint))
-        form.reset()
+        if (response.status === 500 || response.status === 422) {
+          throw response
+        }
 
-        document.dispatchEvent(new CustomEvent('message', {
-          detail: {
-            message: 'Datos guardados correctamente',
-            type: 'success'
-          }
-        }))
-      } catch (error) { console.error(error) }
+        if (response.status === 200) {
+          store.dispatch(refreshTable(endpoint))
+          this.resetForm()
+
+          document.dispatchEvent(new CustomEvent('message', {
+            detail: {
+              message: 'Datos guardados correctamente',
+              type: 'success'
+            }
+          }))
+        }
+      } catch (error) {
+        const data = await error.json()
+
+        if (error.status === 500) {
+          document.dispatchEvent(new CustomEvent('message', {
+            detail: {
+              message: data.message
+            }
+          }))
+        }
+
+        if (error.status === 422) {
+          this.shadow.querySelector('.validation-errors').classList.add('active')
+          const errorList = this.shadow.querySelector('.validation-errors ul')
+          errorList.innerHTML = ''
+
+          this.shadow.querySelectorAll('input.error').forEach(input => {
+            input.classList.remove('error')
+          })
+
+          data.message.forEach(errorMessage => {
+            this.shadow.querySelector(`[name='${errorMessage.path}']`).classList.add('error')
+            const li = document.createElement('li')
+            li.textContent = errorMessage.message
+            errorList.appendChild(li)
+          })
+        }
+      }
+    })
+  }
+
+  resetForm = () => {
+    this.shadow.querySelector('.validation-errors').classList.remove('active')
+    const errorList = this.shadow.querySelector('.validation-errors ul')
+    errorList.innerHTML = ''
+
+    this.shadow.querySelectorAll('input.error').forEach(input => {
+      input.classList.remove('error')
     })
   }
 

@@ -8,12 +8,32 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false
       },
       name: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre".'
+          }
+        }
       },
       email: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        unique: {
+          args: true,
+          msg: 'Ya existe un usuario con ese correo electrónico.'
+        },
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Email".'
+          },
+          isEmail: {
+            msg: 'Por favor, rellena el campo "Email" con un email válido.'
+          }
+        }
       },
       createdAt: {
         type: DataTypes.DATE
@@ -44,7 +64,6 @@ module.exports = function (sequelize, DataTypes) {
     User.hasMany(models.UserActivationToken, { as: 'userActivationTokens', foreignKey: 'userActivationTokenId' })
     User.hasMany(models.UserCredential, { as: 'userCredentials', foreignKey: 'userCredentialId' })
     User.hasMany(models.UserResetPasswordToken, { as: 'userResetPasswordTokens', foreignKey: 'userResetPasswordTokenId' })
-
   }
 
   return User

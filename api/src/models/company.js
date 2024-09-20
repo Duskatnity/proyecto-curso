@@ -9,19 +9,51 @@ module.exports = function (sequelize, DataTypes) {
       },
       commercialAddress: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Dirección comercial".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Dirección comercial".'
+          }
+        }
       },
       fiscalAddress: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Dirección fiscal".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Dirección fiscal".'
+          }
+        }
       },
       commercialName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre Comercial".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre Comercial".'
+          }
+        }
       },
       fiscalName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Por favor, rellena el campo "Nombre Fiscal".'
+          },
+          notEmpty: {
+            msg: 'Por favor, rellena el campo "Nombre Fiscal".'
+          }
+        }
       },
       vatNumber: {
         type: DataTypes.INTEGER,
