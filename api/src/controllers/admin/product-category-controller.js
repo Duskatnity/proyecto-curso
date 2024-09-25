@@ -98,7 +98,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id
 
-  productCategory.destroy({
+  ProductCategory.destroy({
     where: { id }
   }).then((numberRowsAffected) => {
     if (numberRowsAffected === 1) {

@@ -1,7 +1,7 @@
-import { store } from '../redux/store.js'
-import { applyFilter } from '../redux/crud-slice.js'
+import { store } from '../../redux/store.js'
+import { applyFilter } from '../../redux/crud-slice.js'
 
-class ModalFilter extends HTMLElement {
+class CompaniesModalFilter extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
@@ -87,13 +87,13 @@ class ModalFilter extends HTMLElement {
         <div class="modal">
           <form>
             <div class="modal-header">
-              <h3>Nombre</h3>
+              <h3>Nombre comercial</h3>
             </div>
-            <input name="nombre">
+            <input type="text" name="comercialName">
             <div class="modal-header">
-              <h3>Email</h3>
+              <h3>CIF</h3>
             </div>
-            <input name="email">
+            <input type="text" name="vatNumber">
           <div class="modal-body">
             <div class="destroy-button confirmation-button">
               <button>Filtrar</button>
@@ -135,4 +135,4 @@ class ModalFilter extends HTMLElement {
   }
 }
 
-customElements.define('filter-component', ModalFilter)
+customElements.define('companies-filter-component', CompaniesModalFilter)

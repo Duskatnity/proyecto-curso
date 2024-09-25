@@ -56,7 +56,7 @@ module.exports = function (sequelize, DataTypes) {
         }
       },
       vatNumber: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
       },
       createdAt: {

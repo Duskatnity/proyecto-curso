@@ -1,8 +1,8 @@
 import isEqual from 'lodash-es/isEqual'
-import { store } from '../redux/store.js'
-import { refreshTable } from '../redux/crud-slice.js'
+import { store } from '../../redux/store.js'
+import { refreshTable } from '../../redux/crud-slice.js'
 
-class Form extends HTMLElement {
+class UsersForm extends HTMLElement {
   constructor () {
     super()
     this.unsubscribe = null
@@ -33,6 +33,16 @@ class Form extends HTMLElement {
     this.shadow.innerHTML =
       /* html */`
       <style>
+
+        *{
+          box-sizing: border-box;
+        }
+
+        ul{
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
 
         svg:hover{
           cursor: pointer;
@@ -122,12 +132,24 @@ class Form extends HTMLElement {
           align-items: center;
         }
 
-        .option-general {
+        ul {
           display: flex;
-          background-color: purple;
-          color: white;
+        }
+
+        li {
+          display: flex;
+          color: blue;
           padding: 0.5rem;
           font-weight: 600;
+        }
+
+        li:hover {
+          cursor: pointer;
+        }
+
+        li.active {
+          background-color: purple;
+          color: white;
         }
 
         .option-buttons {
@@ -138,9 +160,14 @@ class Form extends HTMLElement {
           margin-right: 1rem;
         }
 
-        .fields form {
-          display: flex;
-          flex-direction: row;
+        .tab-content {
+          display: none;
+        }
+
+        .tab-content.active {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+          gap: 1rem; 
         }
 
         .form-element {
@@ -159,7 +186,7 @@ class Form extends HTMLElement {
           height: 3vh;
           color: white;
           margin-bottom: 1rem;
-          width: 66vh;
+          width: 100%;
         }
 
         input.error{
@@ -167,38 +194,52 @@ class Form extends HTMLElement {
         }
       </style>
 
-      <div class="right-column">
-        <div class="options-bar">
-          <div class="option-general">
-            <p>General</p>
+      <section class="form">
+        <div class="right-column">
+          <div class="options-bar">
+            <div class="tabs">
+              <ul>
+                <li class="tab active" data-tab="general">General</li>
+                <li class="tab" data-tab="prices">Precios</li>
+              </ul>
+            </div>
+            <div class="option-buttons">
+              <div class="clean-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>broom</title><path d="M19.36,2.72L20.78,4.14L15.06,9.85C16.13,11.39 16.28,13.24 15.38,14.44L9.06,8.12C10.26,7.22 12.11,7.37 13.65,8.44L19.36,2.72M5.93,17.57C3.92,15.56 2.69,13.16 2.35,10.92L7.23,8.83L14.67,16.27L12.58,21.15C10.34,20.81 7.94,19.58 5.93,17.57Z" /></svg>              </div>
+              <div class="save-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>content-save</title><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" /></svg>              </div>
+            </div>
           </div>
-          <div class="option-buttons">
-            <div class="clean-button">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>broom</title><path d="M19.36,2.72L20.78,4.14L15.06,9.85C16.13,11.39 16.28,13.24 15.38,14.44L9.06,8.12C10.26,7.22 12.11,7.37 13.65,8.44L19.36,2.72M5.93,17.57C3.92,15.56 2.69,13.16 2.35,10.92L7.23,8.83L14.67,16.27L12.58,21.15C10.34,20.81 7.94,19.58 5.93,17.57Z" /></svg>              </div>
-            <div class="save-button">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>content-save</title><path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" /></svg>              </div>
+          <div class="fields">
+            <div class="validation-errors">
+              <ul></ul>
+            </div>
+            <form>
+              <div class="tab-content active" data-tab="general">
+                <input type="hidden" name="id">
+                <div class="form-element">
+                  <label>Nombre</label>
+                  <input type="text" class="name-input" name="name">
+                </div>
+                <div class="form-element">
+                  <label>Email</label>
+                  <input type="text" class="email-input" name="email">
+                </div>
+              </div>
+              <div class="tab-content" data-tab="prices">
+                <div class="form-element">
+                  <label>Prices</label>
+                  <input type="text" class="price-input" name="price">
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-        <div class="fields">
-          <div class="validation-errors">
-            <ul></ul>
-          </div>
-          <form>
-            <input type="hidden" name="id">
-            <div class="form-element">
-              <label>Nombre</label>
-              <input type="text" class="name-input" name="name">
-            </div>
-            <div class="form-element">
-              <label>Email</label>
-              <input type="text" class="email-input" name="email">
-            </div>
-          </form>
-        </div>
-      </div>
+      </section>
       `
     this.renderSaveButton()
     this.renderResetButton()
+    this.renderTabsButton()
   }
 
   renderResetButton () {
@@ -206,6 +247,21 @@ class Form extends HTMLElement {
       const form = this.shadow.querySelector('form')
       form.reset()
       this.shadow.querySelector("[name='id']").value = ''
+    })
+  }
+
+  renderTabsButton () {
+    this.shadow.querySelector('.form').addEventListener('click', async (event) => {
+      if (event.target.closest('.tab')) {
+        const tab = event.target.closest('.tab')
+
+        if (!tab.classList.contains('active')) {
+          this.shadow.querySelector('.tab.active').classList.remove('active')
+          tab.classList.add('active')
+          this.shadow.querySelector('.tab-content.active').classList.remove('active')
+          this.shadow.querySelector(`.tab-content[data-tab="${tab.dataset.tab}"]`).classList.add('active')
+        }
+      }
     })
   }
 
@@ -290,6 +346,23 @@ class Form extends HTMLElement {
     this.shadow.querySelectorAll('input.error').forEach(input => {
       input.classList.remove('error')
     })
+
+    this.shadow.querySelector('form').reset()
+  }
+
+  tabsButton () {
+    this.shadow.querySelector('.form').addEventListener('click', async (event) => {
+      if (event.target.closest('.tab')) {
+        const tab = event.target.closest('.tab')
+
+        if (!tab.classList.contains('active')) {
+          this.shadow.querySelector('.tab.active').classList.remove('active')
+          tab.classList.add('active')
+          this.shadow.querySelector('.tab-content.active').classList.remove('active')
+          this.shadow.querySelector(`.tab-content[data-tab="${tab.dataset.tab}"]`).classList.add('active')
+        }
+      }
+    })
   }
 
   showElement = async element => {
@@ -301,4 +374,4 @@ class Form extends HTMLElement {
   }
 }
 
-customElements.define('form-component', Form)
+customElements.define('users-form-component', UsersForm)

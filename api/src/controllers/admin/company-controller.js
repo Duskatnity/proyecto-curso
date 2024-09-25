@@ -6,6 +6,7 @@ exports.create = (req, res) => {
   Company.create(req.body).then(async data => {
     res.status(200).send(data)
   }).catch(err => {
+    console.log(err)
     if (err.errors) {
       res.status(422).send({
         message: err.errors
@@ -34,7 +35,7 @@ exports.findAll = (req, res) => {
 
   Company.findAndCountAll({
     where: condition,
-    attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
+    attributes: ['id', 'commercialName', 'vatNumber', 'createdAt', 'updatedAt'],
     limit,
     offset,
     order: [['createdAt', 'DESC']]
