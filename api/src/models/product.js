@@ -33,7 +33,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       visible: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: false
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -80,9 +80,9 @@ module.exports = function (sequelize, DataTypes) {
 
   Product.associate = function (models) {
     Product.belongsTo(models.ProductCategory, { as: 'productCategory', foreignKey: 'productCategoryId' })
-    Product.hasMany(models.Price, { as: 'products', foreignKey: 'productId' })
+    Product.hasMany(models.Price, { as: 'prices', foreignKey: 'productId' })
+    Product.hasOne(models.Price, { as: 'price', foreignKey: 'productId', scope: { current: true } })
     Product.hasMany(models.SaleDetail, { as: 'saleDetails', foreignKey: 'saleDetailId' })
-
   }
 
   return Product

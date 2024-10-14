@@ -42,7 +42,7 @@ module.exports = {
       },
       visible: {
         type: Sequelize.BOOLEAN,
-        allowNull: false,
+        allowNull: false
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -60,10 +60,7 @@ module.exports = {
     await queryInterface.addIndex('products', ['productCategoryId'], {
       name: 'products_productCategoryId_index'
     })
-
   },
-
-  
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('products')

@@ -1,11 +1,21 @@
 const sequelizeDb = require('../../models')
 const Product = sequelizeDb.Product
+const Price = sequelizeDb.Price
 const Op = sequelizeDb.Sequelize.Op
 
 exports.create = (req, res) => {
   Product.create(req.body).then(async data => {
+    const price = {
+      basePrice: req.body.basePrice,
+      productId: data.id,
+      current: true
+    }
+
+    await Price.create(price)
+
     res.status(200).send(data)
   }).catch(err => {
+    console.log(err)
     if (err.errors) {
       res.status(422).send({
         message: err.errors
@@ -31,7 +41,7 @@ exports.findAll = (req, res) => {
   }
 
   const condition = Object.keys(whereStatement).length > 0 ? { [Op.and]: [whereStatement] } : {}
-  
+
   Product.findAndCountAll({
     where: condition,
     attributes: ['id', 'productCategoryId', 'name', 'reference', 'units', 'measurementUnit', 'measurement', 'visible', 'createdAt', 'updatedAt', 'deletedAt'],
