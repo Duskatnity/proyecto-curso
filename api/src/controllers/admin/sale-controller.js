@@ -31,7 +31,7 @@ exports.findAll = (req, res) => {
   }
 
   const condition = Object.keys(whereStatement).length > 0 ? { [Op.and]: [whereStatement] } : {}
-  
+
   Sale.findAndCountAll({
     where: condition,
     attributes: ['id', 'customerId', 'reference', 'totalBasePrice', 'saleDate', 'saleTime', 'createdAt', 'updatedAt', 'deletedAt'],

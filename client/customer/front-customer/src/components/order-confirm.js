@@ -43,17 +43,17 @@ class OrderConfirm extends HTMLElement {
         }
       </style>
 
-      <div class="content">
-        <div class="title">
-          <p>Pedido realizado con éxito.</p>
+        <div class="content">
+          <div class="title">
+            <p>Pedido realizado con éxito.</p>
+          </div>
+          <div class="description">
+            <p>En breve recibirá un correo con los detalles. La referencia de su pedido es 0000000002</p>
+          </div>  
+          <button class="return-button">
+            Volver a inicio
+          </button>
         </div>
-        <div class="description">
-          <p>En breve recibirá un correo con los detalles. La referencia de su pedido es 0000000002</p>
-        </div>  
-        <button class="return-button">
-          Volver a inicio
-        </button>
-      </div>
       `
   }
 }

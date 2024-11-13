@@ -2,8 +2,8 @@ class Orderorder extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
-
     this.data = []
+    this.unsubscribe = null
   }
 
   async connectedCallback () {
@@ -11,20 +11,36 @@ class Orderorder extends HTMLElement {
     await this.render()
   }
 
-  loadData () {
-    this.data = [
-      {
-        "number": "00000000002",
-        "total": "180.00",
-        "date": "13-05-2024 17:09"
-      },
-      {
-        "number": "00000000003",
-        "total": "150.00",
-        "date": "13-05-2024 17:10"
-      }
-    ]
+  async loadData () {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/customer/sales`)
+
+    if (!response.ok) {
+      console.error(`Error: ${response.status} - ${response.statusText}`)
+      return
+    }
+
+    try {
+      this.data = await response.json()
+      console.log(this.data)
+    } catch (error) {
+      console.error('La respuesta no es un JSON válido:', error)
+    }
   }
+
+  // loadData () {
+  //   this.data = [
+  //     {
+  //       number: '00000000002',
+  //       total: '180.00',
+  //       date: '13-05-2024 17:09'
+  //     },
+  //     {
+  //       number: '00000000003',
+  //       total: '150.00',
+  //       date: '13-05-2024 17:10'
+  //     }
+  //   ]
+  // }
 
   render () {
     this.shadow.innerHTML =
@@ -56,7 +72,7 @@ class Orderorder extends HTMLElement {
           display: flex;
           flex-direction: column;
           justify-content: flex-start;
-          flex-grow: 1; /* Permite que la lista de orderos crezca para ocupar el espacio disponible */
+          flex-grow: 1;
         }
 
         .filterer {
@@ -131,45 +147,49 @@ class Orderorder extends HTMLElement {
           </div>
         </div>
       `
-      const orderList = this.shadow.querySelector('.order-list')
+    const orderList = this.shadow.querySelector('.order-list')
 
-      this.data.forEach(orderItem => {
-        const order = document.createElement('div')
-        order.classList.add('order')
-        orderList.appendChild(order)
+    this.data.rows.forEach(orderItem => {
+      const order = document.createElement('div')
+      order.classList.add('order')
+      orderList.appendChild(order)
 
-        const orderNumber = document.createElement('div')
-        orderNumber.classList.add('order-number', 'left')
-        order.appendChild(orderNumber)
+      const orderNumber = document.createElement('div')
+      orderNumber.classList.add('order-number', 'left')
+      order.appendChild(orderNumber)
 
-        const number = document.createElement('p')
-        number.textContent = orderItem.number
-        orderNumber.appendChild(number)
+      const number = document.createElement('p')
+      number.textContent = orderItem.reference
+      orderNumber.appendChild(number)
 
-        const orderPrice = document.createElement('div')
-        orderPrice.classList.add('order-price', 'right')
-        order.appendChild(orderPrice)
+      const orderPrice = document.createElement('div')
+      orderPrice.classList.add('order-price', 'right')
+      order.appendChild(orderPrice)
 
-        const price = document.createElement('p')
-        price.textContent = orderItem.total+("€")
-        orderPrice.appendChild(price)
+      const price = document.createElement('p')
+      price.textContent = orderItem.totalBasePrice + ('€')
+      orderPrice.appendChild(price)
 
-        const orderDate = document.createElement('div')
-        orderDate.classList.add('order-date', 'left')
-        order.appendChild(orderDate)
+      const orderDate = document.createElement('div')
+      orderDate.classList.add('order-date', 'left')
+      order.appendChild(orderDate)
 
-        const date = document.createElement('p')
-        date.textContent = orderItem.date
-        orderDate.appendChild(date)
+      const date = document.createElement('p')
+      date.textContent = orderItem.saleDate
+      orderDate.appendChild(date)
 
-        const orderButton = document.createElement('div')
-        orderButton.classList.add('button', 'right')
-        order.appendChild(orderButton)
+      const time = document.createElement('p')
+      time.textContent = orderItem.saleTime
+      orderDate.appendChild(time)
 
-        const button = document.createElement('button')
-        button.textContent = ("Ver Pedido")
-        orderButton.appendChild(button)
-      })
+      const orderButton = document.createElement('div')
+      orderButton.classList.add('button', 'right')
+      order.appendChild(orderButton)
+
+      const button = document.createElement('button')
+      button.textContent = ('Ver Pedido')
+      orderButton.appendChild(button)
+    })
   }
 }
 

@@ -270,10 +270,6 @@ class UsersForm extends HTMLElement {
       const form = this.shadow.querySelector('form')
       const formData = new FormData(form)
 
-      // for (const pair of formData.entries()) {
-      //   console.log(pair[0] + ', ' + pair[1])
-      // }
-
       const formDataJson = {}
 
       for (const [key, value] of formData.entries()) {
